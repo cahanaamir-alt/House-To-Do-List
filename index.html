@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#6366F1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="הבית שלי">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%236366F1'/><text x='90' y='125' font-size='110' text-anchor='middle'>🏠</text></svg>">
+<title>הבית שלי</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0F172A; --bg-card: #1E293B; --bg-card2: #273549;
+  --text: #F1F5F9; --text-muted: #94A3B8; --border: #334155;
+  --accent: #6366F1; --accent2: #8B5CF6; --accent-glow: #6366F180;
+  --red: #EF4444; --orange: #F97316; --yellow: #F59E0B; --green: #22C55E; --cyan: #06B6D4;
+}
+[data-theme="light"] {
+  --bg: #F8FAFC; --bg-card: #FFFFFF; --bg-card2: #F1F5F9;
+  --text: #0F172A; --text-muted: #64748B; --border: #E2E8F0;
+  --accent-glow: #6366F140;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: 'Rubik', sans-serif; background: var(--bg); color: var(--text);
+  max-width: 480px; margin: 0 auto; min-height: 100vh; overflow-x: hidden;
+  transition: background .3s, color .3s;
+}
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; }
+
+/* ─── Login Screen ─── */
+.login-screen {
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 40px 24px; text-align: center;
+}
+.login-logo { font-size: 64px; margin-bottom: 16px; animation: float 3s ease-in-out infinite; }
+.login-title {
+  font-size: 32px; font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.login-sub { color: var(--text-muted); font-size: 15px; margin-bottom: 40px; }
+.login-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 14px 32px; font-size: 16px; font-weight: 600; color: var(--text);
+  width: 100%; max-width: 300px; transition: all .2s;
+}
+.login-btn:hover { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+.login-btn svg { width: 20px; height: 20px; }
+.login-version { margin-top: 32px; color: var(--text-muted); font-size: 12px; }
+
+/* ─── Header ─── */
+.header {
+  background: var(--bg-card); border-bottom: 1px solid var(--border);
+  padding: 14px 20px 10px; position: sticky; top: 0; z-index: 50;
+}
+.header-row { display: flex; align-items: center; justify-content: space-between; }
+.logo {
+  font-size: 22px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.shared-badge {
+  font-size: 10px; background: #22C55E20; color: var(--green);
+  padding: 2px 8px; border-radius: 99px; font-weight: 600; margin-right: 8px;
+}
+.icon-btn {
+  background: none; border: none; font-size: 20px; padding: 6px 8px;
+  border-radius: 8px; color: var(--text-muted); position: relative;
+}
+.badge {
+  position: absolute; top: 2px; left: 2px; background: var(--red); color: #FFF;
+  font-size: 10px; font-weight: 700; border-radius: 99px;
+  min-width: 16px; height: 16px; display: flex; align-items: center;
+  justify-content: center; padding: 0 4px;
+}
+
+/* ─── Tabs ─── */
+.tabs { display: flex; gap: 4px; overflow-x: auto; padding: 8px 0 4px; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 6px 12px; border-radius: 99px; border: none; font-size: 12px;
+  font-weight: 400; background: transparent; color: var(--text-muted);
+  cursor: pointer; white-space: nowrap; transition: all .2s;
+}
+.tab.active { background: var(--accent); color: #FFF; font-weight: 600; }
+
+/* ─── Content ─── */
+.content { padding: 16px 20px 100px; }
+
+/* ─── Cards ─── */
+.card {
+  background: var(--bg-card); border-radius: 16px; padding: 16px;
+  margin-bottom: 12px; border: 1px solid var(--border); transition: transform .15s;
+}
+.card:active { transform: scale(0.98); }
+
+/* ─── Stats ─── */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--bg-card); border-radius: 14px; padding: 14px 10px;
+  text-align: center; border: 1px solid var(--border);
+}
+.stat-card[data-color]::before { content: ''; display: block; height: 3px; border-radius: 99px; margin: -14px -10px 10px; border-radius: 14px 14px 0 0; }
+.stat-val { font-size: 26px; font-weight: 700; }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* ─── List Item ─── */
+.list-item {
+  background: var(--bg-card); border-radius: 16px; padding: 14px 16px;
+  margin-bottom: 10px; border: 1px solid var(--border);
+  display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
+  transition: transform .15s;
+}
+.list-item:active { transform: scale(0.98); }
+.item-icon {
+  width: 44px; height: 44px; border-radius: 12px; display: flex;
+  align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+}
+.item-body { flex: 1; min-width: 0; }
+.item-name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.item-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.progress-bar { height: 4px; border-radius: 99px; background: var(--border); overflow: hidden; flex: 1; }
+.progress-fill { height: 100%; border-radius: 99px; transition: width .5s; }
+.progress-row { display: flex; align-items: center; gap: 8px; }
+.status-label { font-size: 11px; font-weight: 600; white-space: nowrap; }
+.done-btn {
+  background: #22C55E20; border: none; border-radius: 10px; padding: 8px 10px;
+  color: var(--green); font-size: 16px; cursor: pointer; flex-shrink: 0;
+}
+.done-btn-lg { padding: 8px 12px; font-size: 12px; font-weight: 600; font-family: inherit; }
+
+/* ─── Form ─── */
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+.form-input {
+  width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--bg-card2); color: var(--text); font-size: 15px; outline: none;
+}
+.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.form-textarea { min-height: 70px; resize: vertical; }
+.form-select { appearance: none; }
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+.cat-btn {
+  padding: 10px 4px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--bg-card2); cursor: pointer; text-align: center;
+  font-size: 12px; color: var(--text); font-family: inherit; transition: all .2s;
+}
+.cat-btn.active { border-width: 2px; }
+.cat-btn-emoji { font-size: 20px; display: block; margin-bottom: 2px; }
+
+/* ─── Buttons ─── */
+.btn-primary {
+  width: 100%; padding: 14px; border-radius: 14px; border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #FFF; font-size: 16px; font-weight: 600; cursor: pointer;
+}
+.btn-secondary {
+  width: 100%; padding: 14px; border-radius: 14px; border: none;
+  background: var(--bg-card2); color: var(--text); font-size: 16px;
+  font-weight: 600; cursor: pointer;
+}
+.btn-danger {
+  width: 100%; padding: 14px; border-radius: 14px;
+  border: 1px solid #EF444440; background: transparent;
+  color: var(--red); font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 8px;
+}
+
+/* ─── FAB ─── */
+.fab {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #FFF; border: none; border-radius: 99px; width: 56px; height: 56px;
+  font-size: 28px; cursor: pointer; box-shadow: 0 4px 20px var(--accent-glow);
+  z-index: 40; display: flex; align-items: center; justify-content: center;
+}
+
+/* ─── Bottom Nav ─── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 480px; background: var(--bg-card);
+  border-top: 1px solid var(--border); display: flex; justify-content: space-around;
+  padding: 8px 0 max(12px, env(safe-area-inset-bottom)); z-index: 40;
+}
+.nav-btn {
+  background: none; border: none; display: flex; flex-direction: column;
+  align-items: center; gap: 2px; font-size: 10px; color: var(--text-muted); font-weight: 400;
+}
+.nav-btn.active { color: var(--accent); font-weight: 600; }
+.nav-icon { font-size: 20px; position: relative; }
+.nav-badge {
+  position: absolute; top: -4px; left: -4px; background: var(--red); color: #FFF;
+  font-size: 8px; font-weight: 700; border-radius: 99px;
+  min-width: 14px; height: 14px; display: flex; align-items: center;
+  justify-content: center; padding: 0 3px;
+}
+
+/* ─── Toggle Switch ─── */
+.toggle { width: 52px; height: 28px; border-radius: 99px; border: none; position: relative; cursor: pointer; transition: background .3s; flex-shrink: 0; }
+.toggle.on { background: var(--green); }
+.toggle.off { background: var(--border); }
+.toggle-knob {
+  width: 22px; height: 22px; border-radius: 99px; background: #FFF;
+  position: absolute; top: 3px; transition: all .3s;
+}
+.toggle.on .toggle-knob { left: 27px; }
+.toggle.off .toggle-knob { left: 3px; }
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  background: var(--green); color: #FFF; padding: 10px 24px; border-radius: 99px;
+  font-size: 14px; font-weight: 600; z-index: 999; box-shadow: 0 4px 20px #22C55E40;
+  animation: fadeIn .3s; pointer-events: none;
+}
+.toast.error { background: var(--red); box-shadow: 0 4px 20px #EF444440; }
+
+/* ─── Expense bar ─── */
+.expense-bar { height: 8px; border-radius: 99px; background: var(--border); overflow: hidden; }
+.expense-fill { height: 100%; border-radius: 99px; transition: width .5s; }
+
+/* ─── Activity log ─── */
+.log-entry { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.log-avatar {
+  width: 32px; height: 32px; border-radius: 99px; background: var(--accent-glow);
+  display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
+}
+
+/* ─── Empty state ─── */
+.empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+/* ─── Info box ─── */
+.info-box { background: var(--accent-glow); border-radius: 10px; padding: 12px; }
+.info-box p { font-size: 12px; color: var(--accent); font-weight: 500; }
+
+/* ─── Category overview grid ─── */
+.cat-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ─── Animations ─── */
+@keyframes fadeIn { from { opacity:0; transform: translateX(-50%) translateY(-10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+@keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+@keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.1); } }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-thumb { background: var(--accent-glow); border-radius: 99px; }
+
+/* Loading */
+.loading { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.loading-icon { font-size: 48px; animation: pulse 1.5s infinite; }
+</style>
+</head>
+<body>
+
+<!-- ===== LOADING ===== -->
+<div id="loadingScreen" class="loading">
+  <div style="text-align:center">
+    <div class="loading-icon">🏠</div>
+    <div style="color:var(--text-muted);margin-top:12px">טוען...</div>
+  </div>
+</div>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginScreen" class="login-screen" style="display:none">
+  <div class="login-logo">🏠</div>
+  <div class="login-title">הבית שלי</div>
+  <div class="login-sub">תחזוקת בית חכמה לכל המשפחה</div>
+  <button class="login-btn" onclick="signIn()">
+    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    כניסה עם Google
+  </button>
+  <div class="login-version">v1.0 • הנתונים מאובטחים ומסונכרנים בענן ☁️</div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="mainApp" style="display:none">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-row">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="logo">🏠 הבית שלי</div>
+        <span class="shared-badge" id="sharedBadge" style="display:none">משותף 👥</span>
+      </div>
+      <div style="display:flex;gap:4px">
+        <span id="userGreeting" style="font-size:12px;color:var(--text-muted);margin-left:8px"></span>
+        <button class="icon-btn" onclick="toggleTheme()" title="מצב בהיר/כהה">🌓</button>
+        <button class="icon-btn" onclick="showView('alerts')" id="alertBtn">
+          🔔 <span class="badge" id="alertBadge" style="display:none">0</span>
+        </button>
+        <button class="icon-btn" onclick="logOut()" title="התנתק">👤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Content -->
+  <div id="appContent" class="content"></div>
+
+  <!-- FAB -->
+  <button class="fab" id="fabBtn" onclick="showView('add')">+</button>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" data-view="dashboard" onclick="showView('dashboard')">
+      <span class="nav-icon">🏠</span>ראשי
+    </button>
+    <button class="nav-btn" data-view="list" onclick="showView('list')">
+      <span class="nav-icon">📋</span>משימות
+    </button>
+    <button class="nav-btn" data-view="expenses" onclick="showView('expenses')">
+      <span class="nav-icon">💰</span>הוצאות
+    </button>
+    <button class="nav-btn" data-view="alerts" onclick="showView('alerts')">
+      <span class="nav-icon">🔔<span class="nav-badge" id="navAlertBadge" style="display:none">0</span></span>התראות
+    </button>
+    <button class="nav-btn" data-view="settings" onclick="showView('settings')">
+      <span class="nav-icon">⚙️</span>הגדרות
+    </button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" style="display:none"></div>
+
+<!-- ===== FIREBASE SDK ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ╔═══════════════════════════════════════════════════════════╗
+// ║  🔧 FIREBASE CONFIG — Replace with your project values   ║
+// ╚═══════════════════════════════════════════════════════════╝
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDVNecjimsTRmLSj4d_Ul9gdc8OqB1UfjY",
+  authDomain: "house-to-do-list.firebaseapp.com",
+  projectId: "house-to-do-list",
+  storageBucket: "house-to-do-list.firebasestorage.app",
+  messagingSenderId: "435822118906",
+  appId: "1:435822118906:web:a9927ce4a4594c448b8643"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+db.enablePersistence().catch(() => {});
+
+// ─── Constants ───
+const CATEGORIES = [
+  { id: "ac", name: "מיזוג", emoji: "❄️", color: "#3B82F6" },
+  { id: "electric", name: "חשמל", emoji: "⚡", color: "#F59E0B" },
+  { id: "plumbing", name: "אינסטלציה", emoji: "🔧", color: "#06B6D4" },
+  { id: "kitchen", name: "מטבח", emoji: "🍳", color: "#EF4444" },
+  { id: "garden", name: "גינה", emoji: "🌿", color: "#22C55E" },
+  { id: "cleaning", name: "ניקיון", emoji: "🧹", color: "#A855F7" },
+  { id: "safety", name: "בטיחות", emoji: "🛡️", color: "#F97316" },
+  { id: "general", name: "כללי", emoji: "🏠", color: "#6B7280" }
+];
+
+const FREQ_OPTIONS = [
+  { value: 7, label: "כל שבוע" },
+  { value: 14, label: "כל שבועיים" },
+  { value: 30, label: "כל חודש" },
+  { value: 60, label: "כל חודשיים" },
+  { value: 90, label: "כל 3 חודשים" },
+  { value: 180, label: "כל חצי שנה" },
+  { value: 365, label: "כל שנה" },
+  { value: 730, label: "כל שנתיים" }
+];
+
+const SAMPLE_ITEMS = [
+  { name: "מסנן מזגן סלון", cat: "ac", freq: 90, lastDone: daysAgoStr(80), cost: 0, notes: "" },
+  { name: "בדיקת דוד שמש", cat: "plumbing", freq: 365, lastDone: daysAgoStr(340), cost: 250, notes: "טכנאי: יוסי 050-1234567" },
+  { name: "החלפת פילטר מים", cat: "kitchen", freq: 180, lastDone: daysAgoStr(170), cost: 120, notes: "" },
+  { name: "ניקוי מרזבים", cat: "general", freq: 365, lastDone: daysAgoStr(200), cost: 0, notes: "" },
+  { name: "בדיקת גלאי עשן", cat: "safety", freq: 180, lastDone: daysAgoStr(60), cost: 0, notes: "להחליף סוללות" },
+  { name: "גיזום עצים", cat: "garden", freq: 180, lastDone: daysAgoStr(150), cost: 300, notes: "" }
+];
+
+// ─── State ───
+let State = {
+  user: null,
+  homeId: null,
+  items: [],
+  log: [],
+  view: 'dashboard',
+  filter: 'all',
+  sortBy: 'urgency',
+  shared: false,
+  dark: true,
+  editItem: null,
+  unsubItems: null,
+  unsubLog: null
+};
+
+// ─── Helpers ───
+function daysAgoStr(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+function daysBetween(d1, d2) { return Math.round((new Date(d2) - new Date(d1)) / 86400000); }
+function getCat(id) { return CATEGORIES.find(c => c.id === id) || CATEGORIES[7]; }
+function getFreqLabel(v) { return FREQ_OPTIONS.find(f => f.value === v)?.label || `כל ${v} ימים`; }
+
+function getStatus(item) {
+  const today = new Date().toISOString().slice(0, 10);
+  const daysSince = daysBetween(item.lastDone, today);
+  const daysLeft = item.freq - daysSince;
+  if (daysLeft < 0) return { status: "overdue", daysLeft, label: `באיחור ${Math.abs(daysLeft)} ימים`, color: "var(--red)" };
+  if (daysLeft <= 7) return { status: "urgent", daysLeft, label: `עוד ${daysLeft} ימים`, color: "var(--orange)" };
+  if (daysLeft <= 14) return { status: "soon", daysLeft, label: `עוד ${daysLeft} ימים`, color: "var(--yellow)" };
+  return { status: "ok", daysLeft, label: `עוד ${daysLeft} ימים`, color: "var(--green)" };
+}
+
+function getOverdueCount() { return State.items.filter(i => getStatus(i).status === "overdue").length; }
+function getUrgentCount() { return State.items.filter(i => ["overdue", "urgent"].includes(getStatus(i).status)).length; }
+
+// ─── Toast ───
+let toastTimer;
+function showToast(msg, isError) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = isError ? 'toast error' : 'toast';
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.style.display = 'none', 2500);
+}
+
+// ─── Theme ───
+function toggleTheme() {
+  State.dark = !State.dark;
+  document.body.setAttribute('data-theme', State.dark ? 'dark' : 'light');
+  saveUserPrefs();
+}
+
+// ─── Auth ───
+function signIn() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(err => showToast('שגיאת התחברות: ' + err.message, true));
+}
+function logOut() { if (confirm('להתנתק?')) auth.signOut(); }
+
+auth.onAuthStateChanged(user => {
+  document.getElementById('loadingScreen').style.display = 'none';
+  if (user) {
+    State.user = user;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    document.getElementById('userGreeting').textContent = user.displayName?.split(' ')[0] || '';
+    loadUserPrefs().then(() => {
+      subscribeToData();
+      updateBadges();
+    });
+  } else {
+    State.user = null;
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('mainApp').style.display = 'none';
+    if (State.unsubItems) State.unsubItems();
+    if (State.unsubLog) State.unsubLog();
+  }
+});
+
+// ─── Firestore ───
+function getHomeId() {
+  return State.shared && State.homeId ? State.homeId : State.user.uid;
+}
+
+function itemsRef() { return db.collection('homes').doc(getHomeId()).collection('items'); }
+function logRef() { return db.collection('homes').doc(getHomeId()).collection('log'); }
+function userPrefsRef() { return db.collection('users').doc(State.user.uid); }
+
+async function loadUserPrefs() {
+  try {
+    const doc = await userPrefsRef().get();
+    if (doc.exists) {
+      const d = doc.data();
+      State.dark = d.dark ?? true;
+      State.shared = d.shared ?? false;
+      State.homeId = d.homeId || null;
+      State.sortBy = d.sortBy || 'urgency';
+      document.body.setAttribute('data-theme', State.dark ? 'dark' : 'light');
+    }
+  } catch(e) { console.error('prefs load error', e); }
+}
+
+function saveUserPrefs() {
+  if (!State.user) return;
+  userPrefsRef().set({
+    dark: State.dark, shared: State.shared, homeId: State.homeId,
+    sortBy: State.sortBy, displayName: State.user.displayName
+  }, { merge: true }).catch(() => {});
+}
+
+function subscribeToData() {
+  if (State.unsubItems) State.unsubItems();
+  if (State.unsubLog) State.unsubLog();
+
+  State.unsubItems = itemsRef().orderBy('name').onSnapshot(snap => {
+    State.items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (State.items.length === 0 && !State.shared) seedSampleItems();
+    renderCurrentView();
+    updateBadges();
+    checkOverdueNotifications();
+  }, err => console.error('items sub error', err));
+
+  State.unsubLog = logRef().orderBy('ts', 'desc').limit(50).onSnapshot(snap => {
+    State.log = snap.docs.map(d => d.data());
+    if (State.view === 'settings') renderCurrentView();
+  }, err => console.error('log sub error', err));
+}
+
+async function seedSampleItems() {
+  const batch = db.batch();
+  SAMPLE_ITEMS.forEach(item => {
+    const ref = itemsRef().doc();
+    batch.set(ref, { ...item, addedBy: State.user.displayName || 'אורח', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+  });
+  await batch.commit();
+}
+
+// ─── CRUD ───
+async function addItem(data) {
+  try {
+    await itemsRef().add({
+      ...data, addedBy: State.user.displayName || 'אורח',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    addLogEntry('הוסיף', data.name);
+    showToast('נוסף בהצלחה ✓');
+    showView('list');
+  } catch(e) { showToast('שגיאה בהוספה', true); }
+}
+
+async function updateItem(id, data) {
+  try {
+    await itemsRef().doc(id).update(data);
+    addLogEntry('עדכן', data.name);
+    showToast('עודכן ✓');
+    showView('list');
+  } catch(e) { showToast('שגיאה בעדכון', true); }
+}
+
+async function deleteItem(id) {
+  if (!confirm('למחוק את המשימה?')) return;
+  const item = State.items.find(i => i.id === id);
+  try {
+    await itemsRef().doc(id).delete();
+    addLogEntry('מחק', item?.name || '');
+    showToast('נמחק ✓');
+    showView('list');
+  } catch(e) { showToast('שגיאה במחיקה', true); }
+}
+
+async function markDone(id) {
+  const item = State.items.find(i => i.id === id);
+  if (!item) return;
+  try {
+    await itemsRef().doc(id).update({
+      lastDone: new Date().toISOString().slice(0, 10),
+      doneBy: State.user.displayName || 'אורח'
+    });
+    addLogEntry('ביצע', item.name);
+    showToast('סומן כבוצע ✓');
+  } catch(e) { showToast('שגיאה', true); }
+}
+
+async function addLogEntry(action, itemName) {
+  try {
+    await logRef().add({
+      action, item: itemName,
+      user: State.user.displayName || 'אורח',
+      ts: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  } catch(e) {}
+}
+
+// ─── Sharing ───
+async function createSharedHome() {
+  const homeId = 'home_' + Date.now().toString(36);
+  State.homeId = homeId;
+  State.shared = true;
+  saveUserPrefs();
+  // Copy current items to shared home
+  const batch = db.batch();
+  State.items.forEach(item => {
+    const { id, ...data } = item;
+    batch.set(db.collection('homes').doc(homeId).collection('items').doc(), data);
+  });
+  await batch.commit();
+  subscribeToData();
+  showToast('🏠 בית משותף נוצר!');
+  renderCurrentView();
+}
+
+async function joinSharedHome(homeId) {
+  State.homeId = homeId;
+  State.shared = true;
+  saveUserPrefs();
+  subscribeToData();
+  showToast('🏠 הצטרפת לבית משותף!');
+  renderCurrentView();
+}
+
+function leaveSharedHome() {
+  State.homeId = null;
+  State.shared = false;
+  saveUserPrefs();
+  subscribeToData();
+  showToast('🔒 חזרת למצב אישי');
+  renderCurrentView();
+}
+
+// ─── Notifications ───
+async function requestNotificationPermission() {
+  if (!('Notification' in window)) { showToast('הדפדפן לא תומך בהתראות', true); return; }
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') showToast('🔔 התראות הופעלו!');
+  else showToast('ההתראות לא אושרו', true);
+}
+
+function checkOverdueNotifications() {
+  if (Notification.permission !== 'granted') return;
+  const overdue = State.items.filter(i => getStatus(i).status === 'overdue');
+  if (overdue.length > 0) {
+    new Notification('הבית שלי', {
+      body: `יש ${overdue.length} משימות באיחור!`,
+      icon: '🏠', dir: 'rtl', lang: 'he', tag: 'overdue-check'
+    });
+  }
+}
+
+// ─── Badge updates ───
+function updateBadges() {
+  const count = getOverdueCount();
+  const alertBadge = document.getElementById('alertBadge');
+  const navBadge = document.getElementById('navAlertBadge');
+  const sharedBadge = document.getElementById('sharedBadge');
+
+  alertBadge.textContent = count;
+  alertBadge.style.display = count > 0 ? 'flex' : 'none';
+  navBadge.textContent = count;
+  navBadge.style.display = count > 0 ? 'flex' : 'none';
+  sharedBadge.style.display = State.shared ? 'inline' : 'none';
+}
+
+// ─── Navigation ───
+function showView(view) {
+  State.view = view;
+  State.editItem = null;
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  document.getElementById('fabBtn').style.display = ['dashboard', 'list'].includes(view) ? 'flex' : 'none';
+  renderCurrentView();
+}
+
+function renderCurrentView() {
+  const el = document.getElementById('appContent');
+  switch (State.view) {
+    case 'dashboard': el.innerHTML = renderDashboard(); break;
+    case 'list': el.innerHTML = renderList(); break;
+    case 'add': el.innerHTML = renderForm(); break;
+    case 'edit': el.innerHTML = renderForm(State.editItem); break;
+    case 'expenses': el.innerHTML = renderExpenses(); break;
+    case 'alerts': el.innerHTML = renderAlerts(); break;
+    case 'settings': el.innerHTML = renderSettings(); break;
+  }
+}
+
+function editItem(id) {
+  State.editItem = State.items.find(i => i.id === id);
+  State.view = 'edit';
+  renderCurrentView();
+}
+
+// ─── Render: Dashboard ───
+function renderDashboard() {
+  const alertItems = State.items
+    .filter(i => ["overdue", "urgent"].includes(getStatus(i).status))
+    .sort((a, b) => getStatus(a).daysLeft - getStatus(b).daysLeft);
+
+  let html = `
+    <div class="stat-grid">
+      <div class="stat-card" style="border-top:3px solid var(--accent)">
+        <div class="stat-val" style="color:var(--accent)">${State.items.length}</div>
+        <div class="stat-label">משימות</div>
+      </div>
+      <div class="stat-card" style="border-top:3px solid var(--yellow)">
+        <div class="stat-val" style="color:var(--yellow)">${getUrgentCount()}</div>
+        <div class="stat-label">דורשות טיפול</div>
+      </div>
+      <div class="stat-card" style="border-top:3px solid var(--red)">
+        <div class="stat-val" style="color:var(--red)">${getOverdueCount()}</div>
+        <div class="stat-label">באיחור</div>
+      </div>
+    </div>`;
+
+  if (alertItems.length > 0) {
+    html += `<h3 style="font-size:16px;margin-bottom:10px">⚠️ דורשות טיפול</h3>`;
+    alertItems.slice(0, 4).forEach(item => {
+      const st = getStatus(item);
+      const c = getCat(item.cat);
+      html += `
+        <div class="card" style="display:flex;align-items:center;gap:12px;border-right:3px solid ${st.color};cursor:pointer" onclick="editItem('${item.id}')">
+          <div style="font-size:28px">${c.emoji}</div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:14px">${item.name}</div>
+            <div style="font-size:12px;color:${st.color};font-weight:600;margin-top:2px">${st.label}</div>
+          </div>
+          <button class="done-btn done-btn-lg" onclick="event.stopPropagation();markDone('${item.id}')">✓ בוצע</button>
+        </div>`;
+    });
+  }
+
+  // Category overview
+  html += `<h3 style="font-size:16px;margin:20px 0 10px">לפי קטגוריה</h3><div class="cat-overview">`;
+  CATEGORIES.forEach(c => {
+    const catItems = State.items.filter(i => i.cat === c.id);
+    if (catItems.length === 0) return;
+    const catOverdue = catItems.filter(i => getStatus(i).status === "overdue").length;
+    html += `
+      <div class="card" style="padding:14px;cursor:pointer" onclick="State.filter='${c.id}';showView('list')">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:22px">${c.emoji}</span>
+          <span style="font-weight:600;font-size:14px">${c.name}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted)">
+          ${catItems.length} משימות
+          ${catOverdue > 0 ? `<span style="color:var(--red);margin-right:6px"> • ${catOverdue} באיחור</span>` : ''}
+        </div>
+      </div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+// ─── Render: List ───
+function renderList() {
+  const sorted = State.items
+    .filter(i => State.filter === 'all' || i.cat === State.filter)
+    .sort((a, b) => {
+      if (State.sortBy === 'urgency') return getStatus(a).daysLeft - getStatus(b).daysLeft;
+      if (State.sortBy === 'name') return a.name.localeCompare(b.name, 'he');
+      return a.cat.localeCompare(b.cat);
+    });
+
+  let tabs = `<button class="tab ${State.filter === 'all' ? 'active' : ''}" onclick="State.filter='all';renderCurrentView()">הכל (${State.items.length})</button>`;
+  CATEGORIES.forEach(c => {
+    const cnt = State.items.filter(i => i.cat === c.id).length;
+    if (cnt === 0) return;
+    tabs += `<button class="tab ${State.filter === c.id ? 'active' : ''}" onclick="State.filter='${c.id}';renderCurrentView()">${c.emoji} ${c.name} (${cnt})</button>`;
+  });
+
+  let html = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <h3 style="margin:0;font-size:18px">כל המשימות</h3>
+      <select class="form-input" style="width:auto;padding:6px 10px;font-size:12px" onchange="State.sortBy=this.value;saveUserPrefs();renderCurrentView()">
+        <option value="urgency" ${State.sortBy === 'urgency' ? 'selected' : ''}>מיון: דחיפות</option>
+        <option value="name" ${State.sortBy === 'name' ? 'selected' : ''}>מיון: שם</option>
+        <option value="category" ${State.sortBy === 'category' ? 'selected' : ''}>מיון: קטגוריה</option>
+      </select>
+    </div>
+    <div class="tabs" style="margin-bottom:14px">${tabs}</div>`;
+
+  if (sorted.length === 0) {
+    html += `<div class="empty"><div class="empty-icon">📋</div>אין משימות בקטגוריה זו</div>`;
+  } else {
+    sorted.forEach(item => {
+      const st = getStatus(item);
+      const c = getCat(item.cat);
+      const pct = Math.min(100, ((item.freq - Math.max(0, st.daysLeft)) / item.freq) * 100);
+      html += `
+        <div class="list-item" onclick="editItem('${item.id}')">
+          <div class="item-icon" style="background:${c.color}20">${c.emoji}</div>
+          <div class="item-body">
+            <div class="item-name">${item.name}</div>
+            <div class="item-meta">
+              ${getFreqLabel(item.freq)}
+              ${item.cost > 0 ? ` • ₪${item.cost}` : ''}
+              ${State.shared && item.doneBy ? ` • ביצע: ${item.doneBy}` : ''}
+            </div>
+            <div class="progress-row">
+              <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${st.color}"></div></div>
+              <span class="status-label" style="color:${st.color}">${st.label}</span>
+            </div>
+          </div>
+          <button class="done-btn" onclick="event.stopPropagation();markDone('${item.id}')">✓</button>
+        </div>`;
+    });
+  }
+  return html;
+}
+
+// ─── Render: Form ───
+function renderForm(item) {
+  const isEdit = !!item;
+  const n = item?.name || '';
+  const c = item?.cat || 'ac';
+  const f = item?.freq || 90;
+  const ld = item?.lastDone || new Date().toISOString().slice(0, 10);
+  const co = item?.cost || 0;
+  const no = item?.notes || '';
+
+  let catBtns = '';
+  CATEGORIES.forEach(cat => {
+    catBtns += `<button type="button" class="cat-btn ${c === cat.id ? 'active' : ''}" id="cat-${cat.id}"
+      style="${c === cat.id ? `border-color:${cat.color};background:${cat.color}20` : ''}"
+      onclick="selectCat('${cat.id}','${cat.color}')">
+      <span class="cat-btn-emoji">${cat.emoji}</span>${cat.name}</button>`;
+  });
+
+  let freqOpts = '';
+  FREQ_OPTIONS.forEach(o => {
+    freqOpts += `<option value="${o.value}" ${f === o.value ? 'selected' : ''}>${o.label}</option>`;
+  });
+
+  return `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <button class="icon-btn" style="font-size:24px" onclick="showView('list')">→</button>
+      <h2 style="margin:0;font-size:20px">${isEdit ? 'עריכת משימה' : 'משימה חדשה'}</h2>
+    </div>
+    <div class="form-group">
+      <label class="form-label">שם המשימה</label>
+      <input class="form-input" id="fName" value="${n}" placeholder="למשל: החלפת מסנן מזגן">
+    </div>
+    <div class="form-group">
+      <label class="form-label">קטגוריה</label>
+      <div class="cat-grid">${catBtns}</div>
+      <input type="hidden" id="fCat" value="${c}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">תדירות תחזוקה</label>
+      <select class="form-input form-select" id="fFreq">${freqOpts}</select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">בוצע לאחרונה</label>
+      <input class="form-input" type="date" id="fLastDone" value="${ld}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">עלות (₪)</label>
+      <input class="form-input" type="number" id="fCost" value="${co}" min="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">הערות</label>
+      <textarea class="form-input form-textarea" id="fNotes" placeholder="טכנאי, טלפון, דגם...">${no}</textarea>
+    </div>
+    <button class="btn-primary" onclick="submitForm(${isEdit ? `'${item.id}'` : 'null'})">
+      ${isEdit ? '💾 שמור שינויים' : '➕ הוסף משימה'}
+    </button>
+    ${isEdit ? `<button class="btn-danger" onclick="deleteItem('${item.id}')">🗑️ מחק משימה</button>` : ''}`;
+}
+
+function selectCat(id, color) {
+  document.getElementById('fCat').value = id;
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.borderColor = ''; b.style.background = '';
+  });
+  const btn = document.getElementById('cat-' + id);
+  btn.classList.add('active');
+  btn.style.borderColor = color;
+  btn.style.background = color + '20';
+}
+
+function submitForm(editId) {
+  const name = document.getElementById('fName').value.trim();
+  if (!name) { showToast('⚠️ נא למלא שם', true); return; }
+  const data = {
+    name,
+    cat: document.getElementById('fCat').value,
+    freq: parseInt(document.getElementById('fFreq').value),
+    lastDone: document.getElementById('fLastDone').value,
+    cost: parseFloat(document.getElementById('fCost').value) || 0,
+    notes: document.getElementById('fNotes').value
+  };
+  if (editId) updateItem(editId, data);
+  else addItem(data);
+}
+
+// ─── Render: Expenses ───
+function renderExpenses() {
+  const total = State.items.reduce((s, i) => s + (i.cost || 0), 0);
+  const byCat = CATEGORIES.map(c => ({
+    ...c, total: State.items.filter(i => i.cat === c.id).reduce((s, i) => s + (i.cost || 0), 0)
+  })).filter(c => c.total > 0).sort((a, b) => b.total - a.total);
+  const maxE = Math.max(...byCat.map(c => c.total), 1);
+
+  let html = `
+    <h3 style="font-size:18px;margin-bottom:4px">מעקב הוצאות</h3>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">סה״כ הוצאות תחזוקה</div>
+    <div class="card" style="text-align:center;padding:24px;margin-bottom:20px">
+      <div style="font-size:36px;font-weight:700;color:var(--accent)">₪${total.toLocaleString()}</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:4px">סה״כ</div>
+    </div>`;
+
+  if (byCat.length === 0) {
+    html += `<div class="empty"><div class="empty-icon">💰</div>אין הוצאות מתועדות<div style="font-size:13px;color:var(--text-muted);margin-top:4px">הוסף עלות למשימות כדי לראות נתונים</div></div>`;
+  } else {
+    byCat.forEach(c => {
+      html += `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span style="font-size:20px;width:32px;text-align:center">${c.emoji}</span>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:13px;font-weight:500">${c.name}</span>
+              <span style="font-size:13px;font-weight:600">₪${c.total.toLocaleString()}</span>
+            </div>
+            <div class="expense-bar"><div class="expense-fill" style="width:${(c.total / maxE) * 100}%;background:${c.color}"></div></div>
+          </div>
+        </div>`;
+    });
+  }
+  return html;
+}
+
+// ─── Render: Alerts ───
+function renderAlerts() {
+  const alertItems = State.items
+    .filter(i => ["overdue", "urgent", "soon"].includes(getStatus(i).status))
+    .sort((a, b) => getStatus(a).daysLeft - getStatus(b).daysLeft);
+
+  let html = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <button class="icon-btn" style="font-size:24px" onclick="showView('dashboard')">→</button>
+      <h2 style="margin:0;font-size:20px">התראות</h2>
+    </div>`;
+
+  if (alertItems.length === 0) {
+    html += `<div class="empty"><div class="empty-icon">🎉</div>הכל מטופל! אין התראות</div>`;
+  } else {
+    alertItems.forEach(item => {
+      const st = getStatus(item);
+      const c = getCat(item.cat);
+      html += `
+        <div class="card" style="display:flex;align-items:center;gap:12px;border-right:3px solid ${st.color}">
+          <span style="font-size:28px">${c.emoji}</span>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:14px">${item.name}</div>
+            <div style="font-size:12px;color:${st.color};font-weight:600;margin-top:2px">${st.label}</div>
+          </div>
+          <button class="done-btn done-btn-lg" onclick="markDone('${item.id}')">✓ בוצע</button>
+        </div>`;
+    });
+  }
+  return html;
+}
+
+// ─── Render: Settings ───
+function renderSettings() {
+  const logHtml = State.log.length === 0
+    ? `<div class="empty" style="padding:20px"><div style="font-size:36px;margin-bottom:8px">📝</div><div style="font-size:13px">אין פעילות עדיין</div></div>`
+    : State.log.slice(0, 20).map(entry => {
+        const d = entry.ts?.toDate ? entry.ts.toDate() : new Date(entry.ts);
+        const timeStr = d.toLocaleDateString('he-IL', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+        const icon = entry.action === 'ביצע' ? '✓' : entry.action === 'הוסיף' ? '+' : entry.action === 'מחק' ? '🗑' : '✏️';
+        return `
+          <div class="log-entry">
+            <div class="log-avatar">${icon}</div>
+            <div style="flex:1">
+              <div style="font-size:13px">
+                <span style="font-weight:600">${entry.user}</span>
+                <span style="color:var(--text-muted)"> ${entry.action} </span>
+                <span style="font-weight:500">${entry.item}</span>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${timeStr}</div>
+            </div>
+          </div>`;
+      }).join('');
+
+  return `
+    <h3 style="font-size:18px;margin-bottom:16px">הגדרות ושיתוף</h3>
+
+    <!-- Notifications -->
+    <div class="card" style="padding:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-weight:600;font-size:15px">🔔 התראות</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">קבל התראות כשמשימה באיחור</div>
+        </div>
+        <button class="btn-primary" style="width:auto;padding:8px 16px;font-size:13px" onclick="requestNotificationPermission()">
+          ${Notification.permission === 'granted' ? '✓ פעיל' : 'הפעל'}
+        </button>
+      </div>
+    </div>
+
+    <!-- Sharing -->
+    <div class="card" style="padding:16px;margin-top:12px">
+      <div style="font-weight:600;font-size:15px;margin-bottom:12px">👥 בית משותף</div>
+
+      ${State.shared ? `
+        <div class="info-box" style="margin-bottom:12px">
+          <p>✓ מצב משותף פעיל</p>
+          <p style="margin-top:4px;font-size:11px;color:var(--text-muted)">קוד הבית: <strong style="color:var(--text);user-select:all">${State.homeId}</strong></p>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">
+          שתף את הקוד עם בני המשפחה כדי שיוכלו להצטרף
+        </div>
+        <button class="btn-danger" style="margin-top:0" onclick="leaveSharedHome()">🔒 חזור למצב אישי</button>
+      ` : `
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px">
+          צור בית משותף או הצטרף לבית קיים כדי שכל המשפחה תראה את אותן משימות
+        </div>
+        <button class="btn-primary" style="margin-bottom:8px" onclick="createSharedHome()">🏠 צור בית משותף חדש</button>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input class="form-input" id="joinHomeId" placeholder="הכנס קוד בית..." style="flex:1">
+          <button class="btn-primary" style="width:auto;padding:12px 20px" onclick="joinSharedHome(document.getElementById('joinHomeId').value.trim())">הצטרף</button>
+        </div>
+      `}
+    </div>
+
+    <!-- Activity Log -->
+    <div style="margin-top:20px">
+      <h3 style="font-size:16px;margin-bottom:12px">📝 יומן פעילות</h3>
+      ${logHtml}
+    </div>`;
+}
+
+// ─── PWA Registration ───
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+// Initial render
+showView('dashboard');
+</script>
+</body>
+</html>
