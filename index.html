@@ -342,14 +342,23 @@ input, select, textarea { font-family: inherit; }
 // ╔═══════════════════════════════════════════════════════════╗
 // ║  🔧 FIREBASE CONFIG — Replace with your project values   ║
 // ╚═══════════════════════════════════════════════════════════╝
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDVNecjimsTRmLSj4d_Ul9gdc8OqB1UfjY",
+  authDomain: "house-to-do-list.firebaseapp.com",
+  projectId: "house-to-do-list",
+  storageBucket: "house-to-do-list.firebasestorage.app",
+  messagingSenderId: "435822118906",
+  appId: "1:435822118906:web:a9927ce4a4594c448b8643"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 // ─── Detect demo mode (Firebase not configured) ───
 const DEMO_MODE = firebaseConfig.apiKey === "YOUR_API_KEY" || !firebaseConfig.apiKey;
